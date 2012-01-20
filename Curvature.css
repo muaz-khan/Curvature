@@ -1,0 +1,179 @@
+/***********************************
+    Curvature! - A tool lets you draw curves using Canvas 2d APIs!
+    Developed by Muaz Khan - http://twitter.com/muazkh
+***********************************/
+html, body, div, p, span, a, textarea, label, .options-container p, .no-user-select, h2
+{
+    padding: 0;
+    margin: 0;
+    
+    font-family: Verdana, Arial;
+    overflow:hidden;
+    
+    -moz-user-select: none;
+    -o-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+}
+
+body, html
+{
+    background-color: black;
+}
+
+canvas
+{
+    position: absolute;
+}
+
+h2
+{
+    padding: 5px 20px;
+    font-size: 20px;
+    font-weight:normal;
+    color: yellow;
+    border-bottom: 1px solid gray;
+    box-shadow: inset 0 0 550px rgba(255, 255, 255, .3);
+}
+
+/* It is the <DIV> where we output code; as well as allowing end-user take some action! */
+.output-container
+{
+    margin-left: 10px;
+    margin-right: 10px;
+    color: white;
+    font-size: 16px;
+    box-shadow: inset 0 0 5px white;
+}
+
+.output-container, .menu-buttons
+{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* <textarea> and <p class=code> */
+.code, textarea
+{
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Consolas, 'Andale Mono', 'Lucida Console', 'Courier New', monospace;
+}
+
+#help-section p
+{
+    padding: 10px 20px;
+}
+
+/* Muaz Khan ( @muazkh ) */
+.author
+{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: red;
+    padding: 5px 10px;
+    font: normal 1em Verdana, Arial;
+    opacity:.8;
+    
+    border-top-left-radius: 5px;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #A90329), color-stop(44%, #8F0222), color-stop(100%, #6D0019));
+    background: -webkit-linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
+    background: -moz-linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
+    background: -o-linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
+    background: -ms-linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
+    background: linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
+}
+
+/* Mr. <a> */
+a
+{
+    color: white;
+    text-decoration: none;
+}
+a:hover
+{
+    color: yellow;
+}
+
+/* Top-Buttons in the output-container <DIV> */
+.menu-buttons
+{
+    box-shadow: inset 0 0 145px white;
+    color: black;
+}
+
+.menu-buttons div
+{
+    box-shadow: inset 0 0 5px Gray;
+    display: inline-block;
+    padding: 5px 10px;
+    cursor: default;
+    font-size: 18px;
+}
+
+.menu-buttons div:hover
+{
+    box-shadow: inset 0 0 25px Gray;
+}
+
+.menu-buttons div:active
+{
+    color: Gray;
+}
+
+textarea
+{
+    padding: 10px;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, .9);
+    resize:vertical;
+    outline:none;
+}
+
+/* Making <textarea> and <p> selectable! */
+textarea, p
+{
+    -moz-user-select: initial;
+    -o-user-select: initial;
+    -webkit-user-select: initial;
+    -ms-user-select: initial;
+    user-select: initial;
+}
+
+/* text-area-parentNode */
+.text-area-parentNode
+{
+    font-size: 20px;
+}
+
+.text-area-parentNode
+{
+    display: none;
+    color: yellow;
+}
+
+.text-area-parentNode p
+{
+    padding: 5px;
+}
+
+label:hover
+{
+    color: #D7D700;
+}
+
+/* options container */
+.options-container
+{
+    display: none;
+    padding: 10px;
+}
+
+/* Used in the Help section to align the links! */
+.highlighter
+{
+    width:200px;
+    display:inline-block;
+}

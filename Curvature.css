@@ -26,7 +26,12 @@ canvas
 {
     position: absolute;
 }
-
+header
+{
+    text-indent: -111111px;
+    top: -500px;
+    position: absolute;
+}
 h2
 {
     padding: 5px 20px;
@@ -40,8 +45,8 @@ h2
 /* It is the <DIV> where we output code; as well as allowing end-user take some action! */
 .output-container
 {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
     color: white;
     font-size: 16px;
     box-shadow: inset 0 0 5px white;
@@ -51,14 +56,6 @@ h2
 {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-}
-
-/* <textarea> and <p class=code> */
-.code, textarea
-{
-    padding: 10px 20px;
-    font-size: 16px;
-    font-family: Consolas, 'Andale Mono', 'Lucida Console', 'Courier New', monospace;
 }
 
 #help-section p
@@ -125,6 +122,9 @@ a:hover
 
 textarea
 {
+    font-size: 16px;
+    font-family: Consolas, 'Andale Mono', 'Lucida Console', 'Courier New', monospace;
+    
     padding: 10px;
     overflow: auto;
     background-color: rgba(255, 255, 255, .9);
@@ -150,7 +150,6 @@ textarea, p
 
 .text-area-parentNode
 {
-    display: none;
     color: yellow;
 }
 

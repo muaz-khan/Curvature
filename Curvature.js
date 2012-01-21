@@ -22,12 +22,6 @@
     /* Backward canvas stores previous curves! */
     backwardContext = find('#backward-canvas').getContext('2d'), 
 
-    /* An element to display "moveTo" coordinates: context.moveTo(x, y) */
-    elementForMoveTo = find('#move-to'), 
-
-    /* An element to display bezierCurve coordinates: context.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x, y)  */
-    elementForCurveTo = find('#curve-to'), 
-
     /* Used for circles: "first-circle", "second-circle", "third-circle" and "fourth-circle" */
     shapeOnMouseDown = null, 
 
@@ -55,7 +49,7 @@
         moveToX: 190,
         moveToY: 300,
 
-        /* These are moveTo points; while started designing. All upcoming points will be subtracted from these points! – to allow shape movement easy! */
+        /* These are moveTo points; while started designing. All upcoming points will be subtracted from these points! â€“ to allow shape movement easy! */
         topmostMoveToX: 190,
         topmostMoveToY: 300,
         
@@ -65,19 +59,24 @@
         secondControlPointY: 150,
         endingPointX: 690,
         endingPointY: 300
-    }, 
+    },
+
+    /* The moveTo and bezierCurveTo points for current curve! */
+    latestCurveMoveToPoints = 0,
+    latestCurveBezierPoints = 0,
+    latestTempCurveMovetoPoints = 0,
+    latestTempCurveBezierPoints = 0,
 
     /* absolute or relative coordinates */
     isAbsolute = false, 
     isRelative = true, 
 
     /* menu buttons */
-    btnAbsolute = find('#absolute'), 
-    btnRelative = find('#relative'), 
     btnNewCurve = find('#new-curve'), 
     btnGetAllCurves = find('#get-all-curves'), 
     btnOptions = find('#options'), 
-    btnHelp = find('#help'), 
+    btnHelp = find('#help'),
+    btnUndo = find('#undo'),
 
     /* Arrays for storing absolute/relative coordinates */
     relativeCurvesPoints = [], 
@@ -93,9 +92,6 @@
 
     /* If checked, calling context.fill() too */
     isfillColor = false, 
-
-    /* Get real time results in text area while drawing! */
-    isGetRealtimeResults = false, 
     
     textArea = find('#text-area');
 
@@ -108,19 +104,18 @@
     doc.addEventListener('keyup', keyUp, false);
 
     /* Button-Level events */
-    btnAbsolute.addEventListener(isTouch ? 'touchstart' : 'click', btnAbsoluteClick, false);
-    btnRelative.addEventListener(isTouch ? 'touchstart' : 'click', btnRelativeClick, false);
     btnNewCurve.addEventListener(isTouch ? 'touchstart' : 'click', newCurve, false);
     btnGetAllCurves.addEventListener(isTouch ? 'touchstart' : 'click', getAllCurves, false);
     btnOptions.addEventListener(isTouch ? 'touchstart' : 'click', btnOptionsClick, false);
     btnHelp.addEventListener(isTouch ? 'touchstart' : 'click', btnHelpClick, false);
+    btnUndo.addEventListener(isTouch ? 'touchstart' : 'click', btnUndoClick, false);
 
     /* Setting width/height for both canvas */
     designerContext.canvas.width = backwardContext.canvas.width = innerWidth;
     designerContext.canvas.height = backwardContext.canvas.height = innerHeight - designerContext.canvas.offsetTop;
 
     /* Setting width/height for textarea */
-    textArea.style.width = (innerWidth - 40) + 'px';
+    textArea.style.width = (innerWidth - 60) + 'px';
     textArea.style.height = (innerHeight / 4) + 'px';
 
     /* Default properties for designer canvas! */
@@ -316,22 +311,22 @@
         + endingPointX + ', ' 
         + endingPointY + ' );';
         
-        if (isRelative) {
-            elementForCurveTo.innerHTML = tempHTMLForCurve;
-            elementForMoveTo.innerHTML = tempHTMLForMoveTo;
+        if (isRelative) {            
+            latestCurveMoveToPoints = tempHTMLForMoveTo;
+            latestCurveBezierPoints = tempHTMLForCurve;
         } 
         else {
             /* If "isAbsolute" checkbox is checked or "Absolute" button is clicked then storing relative coordinates in two hidden fields so we can access them later to store the relative coordinates when calling "New Curve". */
-            find('#hidden-curve-to').value = tempHTMLForCurve;
-            find('#hidden-move-to').value = tempHTMLForMoveTo;
+            latestTempCurveBezierPoints = tempHTMLForCurve;
+            latestTempCurveMovetoPoints = tempHTMLForMoveTo;
         }
 
 
         /* The "end-user" wants "absolute points":----  e.pageX and e.pageY */
         if (isAbsolute) {
             /* Outputting all coordinates! */
-            elementForMoveTo.innerHTML = 'context.moveTo( ' + points.moveToX + ', ' + points.moveToY + ' );';
-            elementForCurveTo.innerHTML = 'context.bezierCurveTo( ' + points.firstControlPointX + ', ' 
+            latestCurveMoveToPoints = 'context.moveTo( ' + points.moveToX + ', ' + points.moveToY + ' );';
+            latestCurveBezierPoints = 'context.bezierCurveTo( ' + points.firstControlPointX + ', ' 
             + points.firstControlPointY + ', ' 
             + points.secondControlPointX + ', ' 
             + points.secondControlPointY + ', ' 
@@ -340,7 +335,7 @@
         }
 
         /* If end user says "not call clearRect method"! */
-        if (isNoClearRect) {
+        if (isNoClearRect && pageX !== 0) {
             backwardContext.lineWidth = 2;
             backwardContext.strokeStyle = 'yellow';
             backwardContext.beginPath();
@@ -350,13 +345,13 @@
 
             /* Setting the relative coordinates! */
             if (isRelative) {
-                relativeCurvesPoints[relativeCurvesPoints.length] = elementForCurveTo.innerHTML;
-                relativeMoveToPoints[relativeMoveToPoints.length] = elementForMoveTo.innerHTML;
+                relativeCurvesPoints[relativeCurvesPoints.length] = latestCurveBezierPoints;
+                relativeMoveToPoints[relativeMoveToPoints.length] = latestCurveMoveToPoints;
             } 
             else {
                 /* If "isAbsolute" checkbox is checked or "Absolute" button is clicked then storing relative coordinates in two hidden fields so we can access them later to store the relative coordinates when calling "New Curve". */
-                relativeMoveToPoints[relativeMoveToPoints.length] = find('#hidden-move-to').value;
-                relativeCurvesPoints[relativeCurvesPoints.length] = find('#hidden-curve-to').value;
+                relativeMoveToPoints[relativeMoveToPoints.length] = latestTempCurveMovetoPoints;
+                relativeCurvesPoints[relativeCurvesPoints.length] = latestTempCurveBezierPoints;
             }
 
             /* Setting the absolute coordinates! */
@@ -364,10 +359,9 @@
             absoluteCurvesPoints[absoluteCurvesPoints.length] = [points.firstControlPointX, points.firstControlPointY, points.secondControlPointX, points.secondControlPointY, points.endingPointX, points.endingPointY];
         }
         
-        if (isGetRealtimeResults)
-            getAllCurves();
+        getAllCurves();
 
-        /* Setting first-most x-y coordinates – so all subsequent coordinates can be extracted from them! */
+        /* Setting first-most x-y coordinates â€“ so all subsequent coordinates can be extracted from them! */
         if (relativeMoveToPoints.length === 0) {
             points.topmostMoveToX = points.moveToX;
             points.topmostMoveToY = points.moveToY;
@@ -375,7 +369,7 @@
         /* The "Handle Drawing" function ends here */
     }
 
-    /* Firing mouse-up event – so to stop dragging the curve! */
+    /* Firing mouse-up event â€“ so to stop dragging the curve! */
     function mouseUp(e) {
         e.preventDefault();
         e = e.pageX ? e : e.touches.length ? e.touches[0] : {pageX: 0,pageY: 0};
@@ -387,7 +381,7 @@
         handleDrawing(pageX, pageY, designerContext);
     }
 
-    /* Firing mouse-move event – if mouse-down: dragging the curve’s appropriate point! */
+    /* Firing mouse-move event â€“ if mouse-down: dragging the curveâ€™s appropriate point! */
     function mouseMove(e) {
         e.preventDefault();
         e = e.pageX ? e : e.touches.length ? e.touches[0] : {pageX: 0,pageY: 0};
@@ -399,7 +393,7 @@
             handleDrawing(pageX, pageY, designerContext);
     }
 
-    /* Firing mouse-down event – so to start dragging the curve! */
+    /* Firing mouse-down event â€“ so to start dragging the curve! */
     function mouseDown(e) {
         e.preventDefault();
         e = e.pageX ? e : e.touches.length ? e.touches[0] : {pageX: 0,pageY: 0};
@@ -434,59 +428,17 @@
     function keyUp(e) {
         e.preventDefault();
 
-        if (e.keyCode === 27) {
-            // "ESC" key for closing some sections
-            textArea.value = '';
-            textArea.parentNode.style.display = 'none';
-            
-            find('#options-container').style.display = 'none';
-            find('#code-container').style.display = 'block';
-            find('#help-section').style.display = 'none';
-        } 
-        else if (e.keyCode === 78) {
+        if (e.keyCode === 78) {
             // "N" key for creating new curve
             newCurve();
         } 
         else if (e.keyCode === 85) {
-            // "U" key for Undo           
-            if (absoluteCurvesPoints.length && absoluteMoveToPoints.length) {
-                var lastMoveToPoint = absoluteMoveToPoints[absoluteMoveToPoints.length - 1], 
-                lastCurvePoint = absoluteCurvesPoints[absoluteCurvesPoints.length - 1];
-                
-                points.circleForMoveToCurveX = points.moveToX = lastMoveToPoint[0];
-                points.circleForMoveToCurveY = points.moveToY = lastMoveToPoint[1];
-                
-                points.firstControlPointX = points.circleForFirstControlPointX = lastCurvePoint[0];
-                points.firstControlPointY = points.circleForFirstControlPointY = lastCurvePoint[1];
-                points.secondControlPointX = points.circleForSecondControlPointX = lastCurvePoint[2];
-                points.secondControlPointY = points.circleForSecondControlPointY = lastCurvePoint[3];
-                points.endingPointX = points.circleForEndingPointX = lastCurvePoint[4];
-                points.endingPointY = points.circleForEndingPointY = lastCurvePoint[5];
-                
-                
-                absoluteMoveToPoints = absoluteMoveToPoints.reverse().splice(1).reverse();
-                relativeMoveToPoints = relativeMoveToPoints.reverse().splice(1).reverse();
-                
-                absoluteCurvesPoints = absoluteCurvesPoints.reverse().splice(1).reverse();
-                relativeCurvesPoints = relativeCurvesPoints.reverse().splice(1).reverse();
-                
-                handleDrawing(0, 0, designerContext);
-
-                /* We have to change Backward Canvas too for the sake of clear undo effect! */
-                backwardContext.clearRect(0, 0, 50000, 50000);
-                backwardContext.beginPath();
-                var length = absoluteCurvesPoints.length;
-                for (var i = 0; i < length; i++) {
-                    backwardContext.moveTo(absoluteMoveToPoints[i][0], absoluteMoveToPoints[i][1]);
-                    var c = absoluteCurvesPoints[i];
-                    backwardContext.bezierCurveTo(c[0], c[1], c[2], c[3], c[4], c[5]);
-                }
-                backwardContext.stroke();
-            }
+            // "U" key for Undo
+            btnUndoClick();
         }
     }
 
-    /* Getting all coordinates for all curves! – It is most useful part of Curvature! */
+    /* Getting all coordinates for all curves! â€“ It is most useful part of Curvature! */
     function getAllCurves() {
         var innerHTML = '';
         
@@ -496,7 +448,7 @@
                 if (relativeMoveToPoints.length)
                     innerHTML += relativeMoveToPoints[0] + '\n';
                 else
-                    innerHTML += elementForMoveTo.innerHTML + '\n';
+                    innerHTML += latestCurveMoveToPoints + '\n';
             }
 
             /* Getting all drawn curves and displaying them in the <textarea>! */
@@ -521,7 +473,7 @@
                 if (absoluteMoveToPoints.length)
                     innerHTML += 'context.moveTo( ' + absoluteMoveToPoints[0][0] + ', ' + absoluteMoveToPoints[0][1] + ' );\n';
                 else
-                    innerHTML += elementForMoveTo.innerHTML + '\n';
+                    innerHTML += latestCurveMoveToPoints + '\n';
             }
             
             length = absoluteCurvesPoints.length;
@@ -538,16 +490,15 @@
 
         /* Also including current curve */
         if (!isOnlyOneMoveToPoint) {
-            innerHTML += elementForMoveTo.innerHTML + '\n';
+            innerHTML += latestCurveMoveToPoints + '\n';
         }
-        innerHTML += elementForCurveTo.innerHTML;
+        innerHTML += latestCurveBezierPoints;
         
         /* Setting the value for <textarea>! */
         textArea.value = innerHTML;
-
+        
         /* Displaying <textarea> and hiding all other section; if they are visible! */
-        textArea.parentNode.style.display = 'block';
-        find('#code-container').style.display = 'none';
+        textArea.parentNode.style.display = 'block';        
         find('#options-container').style.display = 'none';
         find('#help-section').style.display = 'none';
         
@@ -579,13 +530,13 @@
 
         /* Also storing this curve into an array to later use! */
         if (isRelative) {
-            relativeCurvesPoints[relativeCurvesPoints.length] = elementForCurveTo.innerHTML;
-            relativeMoveToPoints[relativeMoveToPoints.length] = elementForMoveTo.innerHTML;
+            relativeCurvesPoints[relativeCurvesPoints.length] = latestCurveBezierPoints;
+            relativeMoveToPoints[relativeMoveToPoints.length] = latestCurveMoveToPoints;
         } 
         else {
             /* If "isAbsolute" checkbox is checked or "Absolute" button is clicked then storing relative coordinates in two hidden fields so we can access them later to store the relative coordinates when calling "New Curve". */
-            relativeMoveToPoints[relativeMoveToPoints.length] = find('#hidden-move-to').value;
-            relativeCurvesPoints[relativeCurvesPoints.length] = find('#hidden-curve-to').value;
+            relativeMoveToPoints[relativeMoveToPoints.length] = latestTempCurveMovetoPoints;
+            relativeCurvesPoints[relativeCurvesPoints.length] = latestTempCurveBezierPoints;
         }
         
         absoluteMoveToPoints[absoluteMoveToPoints.length] = [points.moveToX, points.moveToY];
@@ -608,16 +559,14 @@
             points.circleForEndingPointX = tempCircleX;
             points.circleForEndingPointY = tempCircleY;
         }
-        if (isGetRealtimeResults)
-            getAllCurves();
+        getAllCurves();
     }
 
     /* Button to get relatively positioned coordinates for only-one curve! */
     function btnRelativeClick(e) {
         isAbsolute = false;
         isRelative = true;
-        handleDrawing(e.pageX, e.pageY, designerContext);
-        find('#code-container').style.display = 'block';
+        handleDrawing(e.pageX, e.pageY, designerContext);        
         find('#options-container').style.display = 'none';
         find('#text-area').parentNode.style.display = 'none';
         find('#help-section').style.display = 'none';
@@ -629,8 +578,7 @@
     function btnAbsoluteClick(e) {
         isRelative = false;
         isAbsolute = true;
-        handleDrawing(e.pageX, e.pageY, designerContext);
-        find('#code-container').style.display = 'block';
+        handleDrawing(e.pageX, e.pageY, designerContext);        
         find('#options-container').style.display = 'none';
         find('#text-area').parentNode.style.display = 'none';
         find('#help-section').style.display = 'none';
@@ -651,11 +599,7 @@
 
     /* options menu button click */
     function btnOptionsClick() {
-        var optionsContainer = find('#options-container'), codeContainer = find('#code-container');
-        
-        optionsContainer.style.display = 'block';
-        codeContainer.style.display = 'none';
-        
+        find('#options-container').style.display = 'block';        
         find('#text-area').parentNode.style.display = 'none';
         find('#help-section').style.display = 'none';
     }
@@ -664,8 +608,45 @@
     function btnHelpClick() {
         find('#help-section').style.display = 'block';
         find('#options-container').style.display = 'none';
-        find('#code-container').style.display = 'none';
         find('#text-area').parentNode.style.display = 'none';
+    }
+
+    /* undo the previous curve! */
+    function btnUndoClick() {
+        if (absoluteCurvesPoints.length && absoluteMoveToPoints.length) {
+            var lastMoveToPoint = absoluteMoveToPoints[absoluteMoveToPoints.length - 1],
+                lastCurvePoint = absoluteCurvesPoints[absoluteCurvesPoints.length - 1];
+
+            points.circleForMoveToCurveX = points.moveToX = lastMoveToPoint[0];
+            points.circleForMoveToCurveY = points.moveToY = lastMoveToPoint[1];
+
+            points.firstControlPointX = points.circleForFirstControlPointX = lastCurvePoint[0];
+            points.firstControlPointY = points.circleForFirstControlPointY = lastCurvePoint[1];
+            points.secondControlPointX = points.circleForSecondControlPointX = lastCurvePoint[2];
+            points.secondControlPointY = points.circleForSecondControlPointY = lastCurvePoint[3];
+            points.endingPointX = points.circleForEndingPointX = lastCurvePoint[4];
+            points.endingPointY = points.circleForEndingPointY = lastCurvePoint[5];
+
+
+            absoluteMoveToPoints = absoluteMoveToPoints.reverse().splice(1).reverse();
+            relativeMoveToPoints = relativeMoveToPoints.reverse().splice(1).reverse();
+
+            absoluteCurvesPoints = absoluteCurvesPoints.reverse().splice(1).reverse();
+            relativeCurvesPoints = relativeCurvesPoints.reverse().splice(1).reverse();
+
+            handleDrawing(0, 0, designerContext);
+
+            /* We have to change Backward Canvas too for the sake of clear undo effect! */
+            backwardContext.clearRect(0, 0, 50000, 50000);
+            backwardContext.beginPath();
+            var length = absoluteCurvesPoints.length;
+            for (var i = 0; i < length; i++) {
+                backwardContext.moveTo(absoluteMoveToPoints[i][0], absoluteMoveToPoints[i][1]);
+                var c = absoluteCurvesPoints[i];
+                backwardContext.bezierCurveTo(c[0], c[1], c[2], c[3], c[4], c[5]);
+            }
+            backwardContext.stroke();
+        }
     }
 
     /* Don't call clearRect; if this check is checked. */
@@ -690,14 +671,6 @@
             isfillColor = true;
         else
             isfillColor = false;
-    };
-
-    /* Get real time results in text area while drawing! */
-    find('#get-real-time-results').onchange = function() {
-        if (this.checked)
-            isGetRealtimeResults = true;
-        else
-            isGetRealtimeResults = false;
     };
 
     /* If end user is interested in absolute coordinates; he can check a checkbox! */

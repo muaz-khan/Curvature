@@ -18,33 +18,25 @@
 </head>
 <!-- BODY -->
 <body>
+    <header>
+        <h1>Curvature: A tool lets you design bezier curves using Canvas 2d APIs!</h1>
+        <menu>
+            <ul>
+                <li>
+                    <a href="http://bit.ly/curvature-source">Source Code</a>
+                </li>
+                <li>
+                    <a href="http://bit.ly/curvature-video">Video Presentation</a>
+                </li>
+                <li>
+                    <a href="http://bit.ly/curvature-post">What is Curvature?</a>
+                </li>
+            </ul>
+        </menu>
+    </header>
+
     <!-- Output Container: It is the section of the page used for output! -->
     <div id="output-container" class="output-container">
-        <!-- <coding output starts here> -->
-        <div id="code-container" class="code-container">
-            <h2>
-                Curvature: A tool lets you design curves using Canvas 2d APIs!
-            </h2>
-            <p class="code">
-                context.lineWidth = 4;
-            </p>
-            
-            <!-- <If "isAbsolute" checkbox is checked or "Absolute" button is clicked then storing relative coordinates in two hidden fields so we can access them later to store the relative coordinates when calling "New Curve"> -->
-            <input id="hidden-move-to" type="hidden" value="" />
-            <input id="hidden-curve-to" type="hidden" value="" />
-
-            <p id="move-to" class="code">
-                context.moveTo( x = 190, y = 300 );
-            </p>
-            <p id="curve-to" class="code">
-                context.bezierCurveTo( x + 160, y - 150, x + 360, y - 150, x + 500, y );
-            </p>
-            <p class="code">
-                context.stroke();
-            </p>
-        </div>
-        <!-- </coding output ends here> -->
-
         <!-- <options-container starts here> -->
         <div id="options-container" class="options-container">
             <h2 style="margin:-10px; margin-bottom:10px;">
@@ -56,22 +48,18 @@
             </p>
             <p>
                 <input id="do-not-clear-rect" type="checkbox" value="" />
-                <label for="do-not-clear-rect">Don’t call clearRect + auto insert new curves while moving mouse</label>
+                <label for="do-not-clear-rect">Donâ€™t call clearRect + auto insert new curves while moving mouse</label>
             </p>
             <p>
                 <input id="is-fill-color" type="checkbox" value="" />
                 <label for="is-fill-color">Fill Color: Call context.fill()</label>                
-            </p>
-            <p>                
-                <input id="get-real-time-results" type="checkbox" value="" />
-                <label for="get-real-time-results">Get real-time results</label>
-            </p>
+            </p>            
         </div>
 
         <!-- </options-container ends here> -->
         <div class="text-area-parentNode">
             <p class="no-user-select">
-                Press <strong>Escape</strong> key to exit.
+                Curvature | 
 
                 <input id="is-absolute-points" type="checkbox" value="" />
                 <label for="is-absolute-points" style="font-size: 16px;">
@@ -105,15 +93,12 @@
         </div>
         
         <!--  Menu Buttons: Some buttons to control custom actions! -->
-        <div class="menu-buttons">
-            <div id="relative" style="border-bottom-left-radius: 10px;">
-                Relative
-            </div>
-            <div id="absolute" style="margin-left: -7px;">
-                Absolute
-            </div>
-            <div id="options" style="margin-left: -7px;">
+        <div class="menu-buttons">            
+            <div id="options" style="border-bottom-left-radius: 10px;">
                 Options
+            </div>
+            <div id="undo" style="margin-left: -7px;">
+                Undo
             </div>
             <div id="help" style="margin-left: -7px;">
                 Help

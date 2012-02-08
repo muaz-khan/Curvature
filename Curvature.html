@@ -1,5 +1,7 @@
 <!--***********************************
-    Curvature! - A tool lets you draw curves using Canvas 2d APIs!
+    Curvature is a designer for curving. It generates Canvas 2d APIs relevant code in different forms. It gives you full control over Bezier curves.
+    http://dashingquill.web.officelive.com/Tools/Curvature.html
+    http://dashingquill.web.officelive.com/2012/Curvature.html
     Developed by Muaz Khan - http://twitter.com/muazkh
 *********************************** -->
 <!DOCTYPE html>
@@ -8,112 +10,197 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Curvature: HTML5 Canvas Curves Generator/Tool</title>
-    <meta name="description" content="Html5 Canvas Curvature is a designing tool let you draw Bezier cubic and quadratic curves to build complex shapes easily and get full control over each bit of the design!">
+    <meta name="description" content="Curvature is a designer for curving. It generates Canvas 2d APIs relevant code in different forms. It gives you full control over Bezier curves.">
     <meta name="author" content="Muaz Khan">
-    <link rel="author" type="text/html" href="https://plus.google.com/100325991024054712503">
-    <link rel="stylesheet" href="Curvature.css" />
+    <link rel="author" type="text/html" href="https://plus.google.com/100325991024054712503">    
+    <link rel="home" href="http://dashingquill.web.officelive.com" title="Home page for Dashing Quill&#39;s website">
+    <link rel="alternate" type="application/rss+xml" title="Dashing Quill Feed" href="http://feeds.feedburner.com/dashingquill" />
+    <link href="Curvature.css" rel="stylesheet" type="text/css" />
 </head>
 <!-- BODY -->
-<body>
+<body itemscope itemtype="http://schema.org/WebPage">    
     <header>
-        <h1>Curvature: A tool lets you design bezier curves using Canvas 2d APIs!</h1>
+        <h1>Curvature: HTML5 Canvas Curves Generator/Tool</h1>
         <menu>
-            <ul>
+            <ul itemprop="breadcrumb">
                 <li>
-                    <a href="http://bit.ly/curvature-source">Source Code</a>
+                    <a href="http://dashingquill.web.officelive.com/Default.aspx">Home</a>
                 </li>
                 <li>
-                    <a href="http://bit.ly/curvature-video">Video Presentation</a>
+                    <a href="http://dashingquill.web.officelive.com/About.html">About</a>
                 </li>
                 <li>
-                    <a href="http://bit.ly/curvature-post">What is Curvature?</a>
+                    <a href="http://dashingquill.web.officelive.com/Experiments.html">Experiments</a>
                 </li>
+                <li>
+                    <a href="http://dashingquill.web.officelive.com/Projects.html">Projects</a>
+                </li>                
             </ul>
         </menu>
     </header>
 
     <!-- Output Container: It is the section of the page used for output! -->
     <div id="output-container" class="output-container">
-        <!-- <options-container starts here> -->
-        <div id="options-container" class="options-container">
-            <h2 style="margin:-10px; margin-bottom:10px;">
-                Curvature: Options
-            </h2>
-            <p>
-                <input id="replace-moveTo-points" type="checkbox" value="" />
-                <label for="replace-moveTo-points">Replace moveTo point with ending point on new curves</label>
-            </p>
-            <p>
-                <input id="do-not-clear-rect" type="checkbox" value="" />
-                <label for="do-not-clear-rect">Don’t call clearRect + auto insert new curves while moving mouse</label>
-            </p>
-            <p>
-                <input id="is-fill-color" type="checkbox" value="" />
-                <label for="is-fill-color">Fill Color: Call context.fill()</label>                
-            </p>            
-        </div>
-
-        <!-- </options-container ends here> -->
         <div class="text-area-parentNode">
-            <p class="no-user-select">
-                Curvature | 
+            <div class="no-user-select" style="padding:5px;">
+                <span style="font-size:20px;margin-left:10px;">The Curvature |</span>
+                
 
                 <input id="is-absolute-points" type="checkbox" value="" />
-                <label for="is-absolute-points" style="font-size: 16px;">
+                <label for="is-absolute-points">
                     Get absolute coordinates</label>
+                                
+                <span id="expand-options" class="expand-options">Options</span>
+                <div id="options-popup" class="options-popup">
+                    <ul>
+                        <li>
+                            <input type="checkbox" id="shorten-code" value />
+                            <label for="shorten-code">Shorten the code!</label>
+                        </li>
+                        <li>
+                            <input id="make-relevant-xy-points" type="checkbox" value="" />
+                            <label for="make-relevant-xy-points">Make relevant startingX/startingY points</label>
+                        </li>
+                        <li>
+                            <input id="replace-moveTo-points" type="checkbox" value="" />
+                            <label for="replace-moveTo-points">
+                                Replace starting and ending points' positions at new curve</label>
+                        </li>
+                        <li>
+                            <input id="do-not-clear-rect" type="checkbox" value="" />
+                            <label for="do-not-clear-rect">
+                                Auto create new curves</label>
+                        </li>
+                        <li>
+                            <input id="is-fill-color" type="checkbox" value="" />
+                            <label for="is-fill-color">
+                                Temporarily fill a color in the last curve</label>
+                        </li>                        
+                        <li>
+                            <input type="checkbox" id="drag-whole-curve" value="" />
+                            <label for="drag-whole-curve">
+                                Drag the whole curve</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="drag-whole-drawing" value="" />
+                            <label for="drag-whole-drawing">
+                                Drag all curves at a time (whole drawing!)</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="copy-current-drawing" value="" />
+                            <label for="copy-current-drawing">
+                                Copy current drawing (all curves)
+                            </label>
+                        </li>                        
+                    </ul>
+                </div>
+                <span id="expand-align-options" class="expand-options align-options">Align Curves</span>
+                <div id="align-options-popup" class="options-popup align-options-popup">
+                    <ul>
+                        <li>
+                            <input type="radio" id="align-horizontally" checked />
+                            <label for="align-horizontally">Align Horizontally</label>
 
-                <input id="is-only-one-moveTo-point" type="checkbox" value="" />
-                <label for="is-only-one-moveTo-point" style="font-size: 16px;">
-                    Only one moveTo point</label>
-            </p>
+                            <input type="radio" id="align-vertically" />
+                            <label for="align-vertically">Align Vertically</label>
+                        </li>                        
+                        <li style="opacity:.4;">
+                            <input type="checkbox" id="custom-align-points" disabled />
+                            <label for="custom-align-points">Align to this point:</label>
+                            <input type="text" id="custom-align-points-text" disabled />
+                        </li>
+                        <li>
+                            <input type="checkbox" id="default-align-points" checked />
+                            <label for="default-align-points">Align to relevant topmost points</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="align-all" checked />
+                            <label for="align-all">
+                                Align All
+                            </label>
+                            <ul id="other-align-options" style="opacity:.4;">
+                                <li>
+                                    <input type="checkbox" id="align-starting-points" disabled checked />
+                                    <label for="align-starting-points">
+                                        Align Starting Points</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="align-ending-points" disabled checked />
+                                    <label for="align-ending-points">
+                                        Align Ending Points</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="align-first-control-points" disabled checked />
+                                    <label for="align-first-control-points">
+                                        Align First Control Points</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="align-second-control-points" disabled checked />
+                                    <label for="align-second-control-points">
+                                        Align Second Control Points</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <div class="red-button" id="align-points-redButton">Align Points</div>
+                        </li>
+                    </ul>                    
+                </div>
+            </div>
             <textarea id="text-area" readonly></textarea>
         </div>
 
         <!-- Help section -->
         <div id="help-section" style="display:none;">
-            <h2>Curvature: Help</h2>
-            <p>
-                Press "N" key for new curves.
-            </p>
-            <p>
-                Press "U" key for undo previous curve.
-            </p>
-            <p>
-                <span class="highlighter">Souce Code:</span> <a href="http://bit.ly/curvature-source">bit.ly/curvature-source</a>
-            </p>
-            <p>
-                <span class="highlighter">How to use video:</span> <a href="http://bit.ly/curvature-video">bit.ly/curvature-video</a>
-            </p>
-            <p>
-                <span class="highlighter">How to use post:</span> <a href="http://bit.ly/curvature-post">bit.ly/curvature-post</a>
-            </p>
+            <h2>
+                Help!
+            </h2>
+            <ul>
+                <li>
+                    Developed & Designed by <a href="https://plus.google.com/100325991024054712503" rel="author">Muaz Khan</a> ( <a href="http://twitter.com/muazkh">@muazkh</a> ).
+                </li>
+                <li>
+                    ---------------------------------------------------
+                </li>
+                <li>
+                    Press "N" key to create new curve.
+                </li>
+                <li>
+                    Press "U" key to go back to previous curve.
+                </li>
+                <li>
+                    ---------------------------------------------------
+                </li>
+                <li>
+                    <a href="http://dashingquill.web.officelive.com/2012/Curvature.html">What is Curvature and how to use?</a> - <a href="http://bit.ly/curvature-source" title="Source code on Github" style="color: yellow;">Github</a>
+                </li>                
+            </ul>            
         </div>
         
         <!--  Menu Buttons: Some buttons to control custom actions! -->
-        <div class="menu-buttons">            
-            <div id="options" style="border-bottom-left-radius: 10px;">
-                Options
-            </div>
-            <div id="undo" style="margin-left: -7px;">
-                Undo
-            </div>
-            <div id="help" style="margin-left: -7px;">
+        <div class="menu-buttons">
+            <div id="help" class="help">
                 Help
             </div>
-            <div id="new-curve" style="float:right;border-bottom-right-radius: 10px;">
+            <div id="undo" class="undo" style="margin-left: -7px;">
+                Undo
+            </div>            
+            <div id="hide-show" class="hide-show" style="float:right;">
+                Hide
+            </div>
+            <div id="new-curve" class="new-curve" style="float:right;margin-right: 2px;">
                 New Curve
-            </div>
-            <div id="get-all-curves" style="float:right;margin-right: 2px;">
-                Get All Curves
-            </div>
+            </div>            
         </div>  
     </div>
 
+    <!-- Temp Canvas: <input type="checkbox" id="copy-current-drawing" /> -->
+    <canvas id="temp-canvas"></canvas>
+
     <!-- Backward Canvas: It is used to store previously drawn curves! -->
-    <canvas id="backward-canvas"></canvas>
+    <canvas id="backward-canvas"></canvas>    
 
     <!-- Designer Canvas: It is the main canvas where we allow developers drag and draw curves! -->
     <canvas id="designer-canvas"></canvas>

@@ -1,5 +1,7 @@
 /***********************************
-    Curvature! - A tool lets you draw curves using Canvas 2d APIs!
+    Curvature is a designer for curving. It generates Canvas 2d APIs relevant code in different forms. It gives you full control over Bezier curves.
+    http://dashingquill.web.officelive.com/Tools/Curvature.html
+    http://dashingquill.web.officelive.com/2012/Curvature.html
     Developed by Muaz Khan - http://twitter.com/muazkh
 ***********************************/
 html, body, div, p, span, a, textarea, label, .options-container p, .no-user-select, h2
@@ -35,7 +37,7 @@ header
 h2
 {
     padding: 5px 20px;
-    font-size: 20px;
+    font-size:20px;
     font-weight:normal;
     color: yellow;
     border-bottom: 1px solid gray;
@@ -48,8 +50,16 @@ h2
     margin-left: 20px;
     margin-right: 20px;
     color: white;
-    font-size: 16px;
-    box-shadow: inset 0 0 5px white;
+    font-size: 14px;
+    box-shadow: 0 0 15px white;
+}
+.output-container, .menu-buttons div, .expand-options, .options-popup
+{
+    -webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	transition: all .3s ease;
 }
 
 .output-container, .menu-buttons
@@ -67,14 +77,16 @@ h2
 .author
 {
     position: fixed;
-    bottom: 0;
-    right: 0;
-    background: red;
-    padding: 5px 10px;
-    font: normal 1em Verdana, Arial;
-    opacity:.8;
+    bottom: -2px;
+    right: 0;    
+    padding: 5px 10px;    
     
-    border-top-left-radius: 5px;
+    border-top-left-radius: 5px;    
+}
+.author, .red-button
+{    
+    box-shadow: inset 0 0 5px white;
+    background: red;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #A90329), color-stop(44%, #8F0222), color-stop(100%, #6D0019));
     background: -webkit-linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
     background: -moz-linear-gradient(top, #A90329 0%, #8F0222 44%, #6D0019 100%);
@@ -97,7 +109,7 @@ a:hover
 /* Top-Buttons in the output-container <DIV> */
 .menu-buttons
 {
-    box-shadow: inset 0 0 145px white;
+    background:white;
     color: black;
 }
 
@@ -107,27 +119,53 @@ a:hover
     display: inline-block;
     padding: 5px 10px;
     cursor: default;
-    font-size: 18px;
+    font-size: 14px;    
+}
+.menu-buttons div, .expand-options
+{
+    background-repeat:no-repeat;
+    background-position: 5px center;
+    padding-left:25px;    
+}
+.options
+{
+    background-image: url(http://dashingquill.web.officelive.com/Tools/Curvature/images/options.png);
+}
+.help
+{
+    background-image: url(http://dashingquill.web.officelive.com/Tools/Curvature/images/help.png);
+}
+.undo
+{
+    background-image: url(http://dashingquill.web.officelive.com/Tools/Curvature/images/undo.png);
+}
+.new-curve
+{
+    background-image: url(http://dashingquill.web.officelive.com/Tools/Curvature/images/new.png);
+}
+.hide-show
+{
+    background-image: url(http://dashingquill.web.officelive.com/Tools/Curvature/images/hide-show.png);
 }
 
 .menu-buttons div:hover
 {
     box-shadow: inset 0 0 25px Gray;
+    background-position: 4px center;
 }
 
 .menu-buttons div:active
-{
+{    
     color: Gray;
 }
 
 textarea
 {
-    font-size: 16px;
+    font-size: 12px;
     font-family: Consolas, 'Andale Mono', 'Lucida Console', 'Courier New', monospace;
     
     padding: 10px;
-    overflow: auto;
-    background-color: rgba(255, 255, 255, .9);
+    overflow: auto;    
     resize:vertical;
     outline:none;
 }
@@ -145,7 +183,7 @@ textarea, p
 /* text-area-parentNode */
 .text-area-parentNode
 {
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .text-area-parentNode
@@ -175,4 +213,74 @@ label:hover
 {
     width:200px;
     display:inline-block;
+}
+
+/* <ul> */
+ul
+{
+    margin-left: 20px;
+    padding-left: 5px;
+    list-style-type: circle;
+}
+ul li
+{
+    padding:5px;
+}
+
+/* Expand Options */
+.expand-options
+{
+    cursor:default;
+    margin-left:10px;
+    background-image: url(http://dashingquill.web.officelive.com/Tools/Curvature/images/expand.png);
+}
+.expand-options:hover
+{    
+    color: #D7D700;    
+}
+.expand-options:active
+{
+    background-position: 1px center;
+}
+.options-popup
+{
+    position: absolute;
+    background: rgba(0, 0, 0, .8);
+    margin-left: 360px;
+    margin-top: 5px;
+    padding: 0 10px;
+    box-shadow: 0 0 10px Gray;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    z-index:10000;
+    display: none;
+}
+
+/* Align options */
+.align-options
+{
+    position: absolute;
+    right: 35px;
+    margin-top: 3px;
+}
+.align-options-popup
+{
+    margin-left: auto;
+    right: 20px;
+}
+[disabled] ~ label:hover { color:inherit; }
+.red-button
+{
+    display: inline-block;
+    padding: 5px 10px;    
+    cursor: default;    
+    border-radius:2px;
+}
+.red-button:hover
+{
+    box-shadow: inset 0 0 10px white;
+}
+.red-button:active
+{
+    box-shadow: inset 0 0 1px white;
 }
